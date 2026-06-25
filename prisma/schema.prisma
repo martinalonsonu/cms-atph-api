@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//
+// ENUMS
+//
+enum UserRole {
+  ADMIN
+  WRITER
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+//
+// USER
+//
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(WRITER)
+  isActive     Boolean  @default(true)
+  username     String?  @unique
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  posts        Post[]
+  media        Media[]
+}
+
+//
+// CATEGORY
+//
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts     Post[]
+}
+
+//
+// TAG
+//
+model Tag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts     PostTag[]
+}
+
+//
+// MEDIA (imágenes / Cloudinary)
+//
+model Media {
+  id          String   @id @default(uuid())
+  url         String
+  publicId    String?
+
+  uploadedBy  String
+
+  createdAt   DateTime @default(now())
+
+  uploader    User @relation(fields: [uploadedBy], references: [id])
+
+  posts       Post[]
+}
+
+//
+// POST
+//
+model Post {
+  id              String      @id @default(uuid())
+
+  title           String
+  slug            String      @unique
+  excerpt         String
+  content         String
+
+  status          PostStatus  @default(DRAFT)
+  publishedAt     DateTime?
+
+  authorId        String
+  categoryId      String
+  featuredImageId String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  author          User      @relation(fields: [authorId], references: [id])
+  category        Category  @relation(fields: [categoryId], references: [id])
+  featuredImage   Media?    @relation(fields: [featuredImageId], references: [id])
+
+  tags            PostTag[]
+}
+
+//
+// POST - TAG (many-to-many)
+//
+model PostTag {
+  postId String
+  tagId  String
+
+  post   Post @relation(fields: [postId], references: [id])
+  tag    Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
+}
