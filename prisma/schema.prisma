@@ -32,84 +32,65 @@ model User {
   isActive     Boolean  @default(true)
   username     String?  @unique
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  posts        Post[]
-  media        Media[]
+  posts Post[]
 }
 
 //
 // CATEGORY
 //
 model Category {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  slug      String   @unique
+  id   String @id @default(uuid())
+  name String @unique
+  slug String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  posts     Post[]
+  posts Post[]
 }
 
 //
 // TAG
 //
 model Tag {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  slug      String   @unique
+  id   String @id @default(uuid())
+  name String @unique
+  slug String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  posts     PostTag[]
-}
-
-//
-// MEDIA (imágenes / Cloudinary)
-//
-model Media {
-  id          String   @id @default(uuid())
-  url         String
-  publicId    String?
-
-  uploadedBy  String
-
-  createdAt   DateTime @default(now())
-
-  uploader    User @relation(fields: [uploadedBy], references: [id])
-
-  posts       Post[]
+  posts PostTag[]
 }
 
 //
 // POST
 //
 model Post {
-  id              String      @id @default(uuid())
+  id String @id @default(uuid())
 
-  title           String
-  slug            String      @unique
-  excerpt         String
-  content         String
+  title   String
+  slug    String @unique
+  excerpt String
+  content String
 
-  status          PostStatus  @default(DRAFT)
-  publishedAt     DateTime?
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
 
-  authorId        String
-  categoryId      String
-  featuredImageId String?
+  authorId      String
+  categoryId    String
+  featuredImage String?
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  author          User      @relation(fields: [authorId], references: [id])
-  category        Category  @relation(fields: [categoryId], references: [id])
-  featuredImage   Media?    @relation(fields: [featuredImageId], references: [id])
+  author   User     @relation(fields: [authorId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
 
-  tags            PostTag[]
+  tags PostTag[]
 }
 
 //
@@ -119,8 +100,8 @@ model PostTag {
   postId String
   tagId  String
 
-  post   Post @relation(fields: [postId], references: [id])
-  tag    Tag  @relation(fields: [tagId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id])
 
   @@id([postId, tagId])
 }
