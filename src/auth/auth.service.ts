@@ -18,7 +18,7 @@ export class AuthService {
     if (!isMatch) throw new UnauthorizedException('Credenciales inválidas');
 
     const payload = {
-      sub: findUser.id,
+      sub: findUser.username,
       role: findUser.role,
     };
 

@@ -8,6 +8,7 @@ import { CategoryModule } from './category/category.module';
 import { TagModule } from './tag/tag.module';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PostModule } from './post/post.module';
     TagModule,
     AuthModule,
     PostModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
