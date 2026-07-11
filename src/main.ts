@@ -18,7 +18,7 @@ class Application {
 
   private configureCors(): void {
     this.app.enableCors({
-      origin: 'http://localhost:4200',
+      origin: process.env.BASE_PATH ?? 'http://localhost:4200',
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
